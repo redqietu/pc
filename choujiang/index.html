@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head> 
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+        <title>演示：PHP+jQuery翻牌抽奖</title>
+        <meta name="keywords" content="翻牌,抽奖" />
+        <meta name="description" content="翻板抽奖的实现流程：页面提供6个方块，当抽奖者点击某一块时，方块翻转到背面，显示中奖信息。" />
+        <link rel="stylesheet" type="text/css" href="http://www.sucaihuo.com/jquery/css/common.css" />
+        <style type="text/css">
+            .demo{width:620px; margin:60px auto;}
+            .demo p{height:60px}
+            #prize{margin:10px auto}
+            #prize li{float:left; width:200px; height:120px; line-height:120px; margin:1px; font-size:48px; text-align:center; color:#fff; cursor:pointer}
+            #viewother,#repeat{height:40px; line-height:40px; text-align:center; font-size:16px; display:none}
+        </style>
+
+    </head>
+    <body>
+        <div class="head">
+            <div class="head_inner clearfix">
+                <ul id="nav">
+                    <li><a href="http://www.sucaihuo.com">首 页</a></li>
+                    <li><a href="http://www.sucaihuo.com/templates">网站模板</a></li>
+                    <li><a href="http://www.sucaihuo.com/js">网页特效</a></li>
+                    <li><a href="http://www.sucaihuo.com/php">PHP</a></li>
+                    <li><a href="http://www.sucaihuo.com/site">精选网址</a></li>
+                </ul>
+                <a class="logo" href="http://www.sucaihuo.com"><img src="http://www.sucaihuo.com/Public/images/logo.jpg" alt="素材火logo" /></a>
+            </div>
+        </div>
+        <div class="container">
+            <div class="demo">
+                <h2 class="title"><a href="http://www.sucaihuo.com/js/118.html">教程：PHP+jQuery翻牌抽奖</a></h2>
+                <p>一等奖：平板电脑，二等奖：数码相机，三等奖：音箱设备，四等奖：4G优盘，五等奖：10Q币<br/>点击数字方块，翻转即抽奖，快来试下你的手气吧。<br/>这只是一个示例，不要问我要奖品哦...</p>
+                
+                <ul id="prize">
+                    <li class="red" title="点击抽奖">1</li>
+                    <li class="green" title="点击抽奖">2</li>
+                    <li class="blue" title="点击抽奖">3</li>
+                    <li class="purple" title="点击抽奖">4</li>
+                    <li class="olive" title="点击抽奖">5</li>
+                    <li class="brown" title="点击抽奖">6</li>
+                </ul>
+                <div style="clear:both; margin-top:20px"><a href="javascript:void(0)" id="viewother">【翻开其他】</a><a href="javascript:void(0);" id="repeat">【再来一次】</a></div>
+                <div id="data"></div>
+
+            </div>
+        </div>
+        <div class="foot">
+            Powered by sucaihuo.com  本站皆为作者原创，转载请注明原文链接：<a href="http://www.sucaihuo.com" target="_blank">www.sucaihuo.com</a>
+        </div>
+        <script type="text/javascript" src="js/jquery-min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="js/jquery.flip.min.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                $("#prize li").each(function() {
+                    var p = $(this);
+                    var c = $(this).attr('class');
+                    p.css("background-color", c);
+                    p.click(function() {
+                        $("#prize li").unbind('click'); //连续翻动
+//                        $.getJSON("ajax.php", function(json) {
+//                            var prize = json.yes; //抽中的奖项
+                            p.flip({
+                                direction: 'rl', //翻动的方向rl：right to left 
+//                                content: prize, //翻转后显示的内容即奖品
+                                color: c, //背景色 
+                                onEnd: function() { //翻转结束 
+                                    p.css({"font-size": "22px", "line-height": "100px"});
+                                    p.attr("id", "r"); //标记中奖方块的id 
+                                    $("#viewother").show(); //显示查看其他按钮 
+                                    $("#prize li").unbind('click').css("cursor", "default").removeAttr("title");
+                                }
+                            });
+                            $("#data").data("nolist", json.no); //保存未中奖信息 
+//                        });
+                    });
+                });
+
+//                $("#viewother").click(function() {
+//                    var mydata = $("#data").data("nolist"); //获取数据
+//                    var mydata2 = eval(mydata);//通过eval()函数可以将JSON转换成数组
+//
+//                    $("#prize li").not($('#r')[0]).each(function(index) {
+//                        var pr = $(this);
+//                        pr.flip({
+//                            direction: 'bt',
+//                            color: 'lightgrey',
+//                            content: mydata2[index], //奖品信息（未抽中）
+//                            onEnd: function() {
+//                                pr.css({"font-size": "22px", "line-height": "100px", "color": "#333"});
+//                                $("#viewother").hide();
+//                            }
+//                        });
+//                    });
+//                    $("#data").removeData("nolist");
+//                });
+                $("#repeat").click(function() {
+                    window.location.reload();
+                });
+            });
+        </script>
+    </body>
+</html>
